@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="城建税记忆卡">
+<title>城建税 · 记忆卡</title>
+<style>
+:root{
+  --bg:#eef2f7; --card:#ffffff; --ink:#0f172a; --sub:#64748b; --line:#e2e8f0;
+  --brand:#0d9488; --brand2:#0f766e;
+  --again:#ef4444; --hard:#f59e0b; --good:#10b981;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden;user-select:none;
+}
+header{padding:calc(env(safe-area-inset-top) + 12px) 16px 8px;flex:0 0 auto;}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.h1{font-size:17px;font-weight:700;letter-spacing:.2px;}
+.h2{font-size:12.5px;color:var(--sub);margin-top:3px;}
+#reset{border:none;background:#fff;color:var(--sub);width:34px;height:34px;border-radius:50%;
+  font-size:16px;box-shadow:0 1px 3px rgba(15,23,42,.08);cursor:pointer;flex:0 0 auto;}
+.bar{height:5px;background:#dbe3ee;border-radius:99px;margin-top:10px;overflow:hidden;}
+#barfill{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:99px;transition:width .3s ease;}
+
+main{flex:1 1 auto;min-height:0;padding:8px 14px;display:flex;justify-content:center;}
+.card{
+  background:var(--card);border-radius:20px;box-shadow:0 6px 20px rgba(15,23,42,.07);
+  padding:16px 18px 14px;width:100%;max-width:680px;height:100%;
+  display:flex;flex-direction:column;min-height:0;
+}
+.chap{font-size:11.5px;color:var(--sub);letter-spacing:.3px;margin-bottom:8px;}
+.tag{display:inline-block;align-self:flex-start;font-size:11.5px;font-weight:600;color:var(--brand2);
+  background:#e6f5f2;border:1px solid #c9eae5;padding:3px 9px;border-radius:99px;}
+.title{font-size:20px;font-weight:700;margin:10px 0 10px;line-height:1.35;flex:0 0 auto;}
+.body{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  font-size:16px;line-height:1.78;white-space:pre-wrap;word-break:break-word;color:#1e293b;padding-right:2px;}
+.meta{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12px;color:var(--sub);
+  display:flex;justify-content:space-between;gap:8px;flex:0 0 auto;}
+
+.done{display:none;background:var(--card);border-radius:20px;box-shadow:0 6px 20px rgba(15,23,42,.07);
+  padding:26px 20px;width:100%;max-width:680px;height:100%;flex-direction:column;justify-content:center;text-align:center;}
+.done.show{display:flex;}
+.done .big{font-size:44px;}
+.done h3{margin:10px 0 6px;font-size:19px;}
+.done p{color:var(--sub);font-size:13.5px;line-height:1.8;margin:4px 0;}
+.done .sched{margin-top:14px;text-align:left;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13.5px;color:#334155;line-height:1.9;}
+
+.nav{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 16px 6px;}
+.nav button{border:1px solid var(--line);background:#fff;color:#334155;font-size:14px;font-weight:600;
+  padding:9px 14px;border-radius:12px;cursor:pointer;}
+.nav button:disabled{opacity:.35;}
+.nav #counter{font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums;}
+
+footer{flex:0 0 auto;padding:6px 14px calc(env(safe-area-inset-bottom) + 12px);
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.btn{border:none;border-radius:14px;padding:16px 6px;font-size:16px;font-weight:700;color:#fff;
+  cursor:pointer;transition:transform .08s ease,filter .15s ease;}
+.btn:active{transform:scale(.96);filter:brightness(.95);}
+.btn.again{background:var(--again);}
+.btn.hard{background:var(--hard);}
+.btn.good{background:var(--good);}
+.hint{flex:0 0 auto;text-align:center;font-size:11.5px;color:var(--sub);padding:2px 14px 0;}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <div>
+      <div class="h1">城市维护建设税 · 记忆卡</div>
+      <div class="h2" id="sub">加载中…</div>
+    </div>
+    <button id="reset" title="重置本机进度">⟳</button>
+  </div>
+  <div class="bar"><div id="barfill"></div></div>
+</header>
+
+<main id="stage">
+  <div class="card" id="card">
+    <div class="chap" id="chap">《税法(I)》· 第四章 城市维护建设税</div>
+    <span class="tag" id="tag"></span>
+    <h2 class="title" id="title"></h2>
+    <div class="body" id="body"></div>
+    <div class="meta" id="meta"></div>
+  </div>
+  <div class="done" id="done"></div>
+</main>
+
+<nav class="nav" id="nav">
+  <button id="prev">‹ 上一张</button>
+  <span id="counter">—</span>
+  <button id="next">下一张 ›</button>
+</nav>
+
+<div class="hint" id="hint">左右滑动 或 点「上一张/下一张」切换 ｜ 下方按钮记录记忆效果</div>
+
+<footer id="actions">
+  <button class="btn again" data-g="again">忘了</button>
+  <button class="btn hard" data-g="hard">模糊</button>
+  <button class="btn good" data-g="good">记住了</button>
+</footer>
+
+<script>
+const CARDS = [{"id": "c02", "tag": "考点01 · 概述 · 识", "title": "概念", "body": "城市维护建设税（简称“城建税”）是对缴纳增值税、消费税（以下简称“两税”）的单位和个人征收的一种税。"}, {"id": "c03", "tag": "考点01 · 概述 · 识", "title": "三个特点", "body": "（1）属于附加税：以“两税”实缴税额之和为计税基础，随“两税”征收\n（2）征收范围较广：除特例外，凡缴“两税”的纳税人均需缴纳\n（3）根据城镇规模设计税率：体现地区差异，符合城市维护需求"}, {"id": "c04", "tag": "考点02 · 纳税人和扣缴义务人 · 识", "title": "纳税人 / 扣缴义务人", "body": "纳税人：缴纳消费税、增值税的单位和个人，包括外商投资企业和外国企业及外籍个人。\n\n扣缴义务人：负有增值税、消费税扣缴义务的单位和个人，在扣缴增值税、消费税的同时扣缴城市维护建设税。"}, {"id": "c05", "tag": "考点03 · 征税范围 · 熟", "title": "征税区域", "body": "包括城市市区、县城、建制镇，以及税法规定征收增值税、消费税的其他地区。"}, {"id": "c06", "tag": "考点03 · 征税范围 · 熟", "title": "进口不征、出口不退", "body": "进口不征：对进口货物或者境外单位和个人向境内销售服务、无形资产缴纳的增值税、消费税税额，不征收城市维护建设税。\n\n出口不退：对出口产品退还增值税、消费税的，不退还已缴纳的城市维护建设税。"}, {"id": "c07", "tag": "考点04 · 税率 · 熟", "title": "一般规定（三档税率）", "body": "地区差别比例税率，7%、5%、1% 三档：\n· 市区 —— 7%\n· 县城、镇 —— 5%\n· 不在市区、县城、镇 —— 1%\n\n纳税人所在地：指纳税人住所地或者与纳税人生产经营活动相关的其他地点，具体地点由省、自治区、直辖市确定。"}, {"id": "c08", "tag": "考点04 · 税率 · 熟", "title": "特殊规定", "body": "（1）市区、县城、镇按照行政区划确定。行政区划变更的，自变更完成当月起适用新行政区划对应的城市维护建设税税率；纳税人在变更完成当月的下一个纳税申报期按新税率申报缴纳。\n\n（2）纳税人跨地区提供建筑服务、销售和出租不动产的，在建筑服务发生地、不动产所在地预缴增值税时，按预缴地城市维护建设税税率就地计算缴纳城市维护建设税。\n\n（3）下列两种情况，可按纳税人缴纳“两税”所在地的规定税率就地缴纳城市维护建设税：①由受托方代收、代扣“两税”的单位和个人；②流动经营等无固定纳税地点的单位和个人。\n\n（4）委托加工业务中，如果受托方是个人的，不实行代收代缴，而是由委托方收回后自行缴纳消费税，所以城市维护建设税也是按委托方所在地税率计算缴纳。"}, {"id": "c09", "tag": "考点05 · 税收优惠 · 熟", "title": "特定减免税政策（一）", "body": "· 黄金相关（调整）：会员单位或客户通过上海黄金交易所、上海期货交易所交易标准黄金，卖出方销售标准黄金时免征城建税；未发生实物交割出库的，交易所免征城建税。\n\n· 基础设施：对国家重大水利工程建设基金免征城建税。\n\n· 创业就业：实施扶持自主就业退役士兵创业就业、重点群体创业就业城建税减免。"}, {"id": "c10", "tag": "考点05 · 税收优惠 · 熟", "title": "特定减免税政策（二）", "body": "· 金融机构撤销：经中国人民银行依法决定撤销的金融机构及其分设于各地的分支机构，用其财产清偿债务时，免征被撤销金融机构转让货物、不动产等应缴纳的城建税。\n\n· 小企业相关：自 2023 年 1 月 1 日至 2027 年 12 月 31 日，对增值税小规模纳税人、小型微利企业和个体工商户，减半征收城建税。\n\n· 文化事业单位转制：经营性文化事业单位转制为企业中资产评估增值、资产转让或划转涉及的城建税，符合现行规定的享受相应税收优惠政策，政策执行至 2027 年 12 月 31 日。"}, {"id": "c11", "tag": "考点05 · 税收优惠 · 熟", "title": "其他优惠政策（“两税”与城建税联动）", "body": "· “两税”减免 → 城建税随之减免\n· “两税”补罚 → 城建税随之补罚\n· “两税”的滞纳金和罚款 → 不作为城建税的计税依据\n· 由于“两税”减免而发生的退税 → 退还已纳的城建税\n· 对出口产品退还“两税”的 → 不退还已缴纳的城建税（出口不退）\n· 海关对进口环节代征的“两税”、境外单位和个人向境内销售服务/无形资产缴纳的增值税 → 不征收城建税（进口不征）\n· “两税”实行先征后返、先征后退、即征即退办法 → 除另有规定外，对随“两税”征收的城建税一律不予退（返）还"}, {"id": "c12", "tag": "考点06 · 计税依据 · 精", "title": "核心公式", "body": "城建税的计税依据是纳税人实际缴纳的消费税、增值税税额。\n\n实际缴纳的“两税”税额 ＝ 应当缴纳的“两税”税额（不含因进口货物或境外单位和个人向境内销售服务、无形资产缴纳的“两税”税额）＋增值税免抵税额－直接减免的“两税”税额－期末留抵退税退还的增值税税额\n\n注：直接减免的“两税”税额，是指依照增值税、消费税相关法律法规和税收政策规定，直接减征或免征的“两税”税额，不包括实行先征后返、先征后退、即征即退办法退还的“两税”税额。"}, {"id": "c13", "tag": "考点06 · 计税依据 · 精", "title": "要点提示", "body": "· 免抵税额要缴纳城市维护建设税。\n（被出口应退税额抵顶的内销应纳税额，实质是企业应缴的增值税，需作为城建税计税依据，不能因征管方式改变而减少计税依据。）\n\n· 城市维护建设税计税依据不包括加收的滞纳金和罚款。\n\n· 对于增值税小规模纳税人更正、查补此前按照一般计税方法确定的城建税计税依据，允许扣除尚未扣除完的留抵退税额。\n\n· 留抵退税额不能从简易计税方法计算的应纳增值税中扣减：①纳税人自收到留抵退税额之日起，应当在下一个纳税申报期从城建税计税依据中扣除；②留抵退税额仅允许在按照增值税一般计税方法确定的城建税计税依据中扣除，当期未扣除完的余额，在以后纳税申报期按规定继续扣除。"}, {"id": "c14", "tag": "考点06 · 计税依据 · 精", "title": "包含 / 不包含 一览", "body": "包括（计入城建税计税依据）：\n· 被查补的“两税”税额\n· 增值税免抵税额\n\n不包括（不计入）：\n· 进口环节被海关代征的“两税”税额\n· 境外单位和个人向境内销售服务、无形资产向税务机关缴纳的增值税税额\n· 直接减免的“两税”税额\n· 加收的滞纳金和罚款（非税款项）\n· 期末留抵退税退还的增值税\n· 除“两税”外的其他税"}, {"id": "c15", "tag": "考点07 · 应纳税额的计算 · 精", "title": "计算公式", "body": "应纳税额 ＝（实纳增值税税额 ＋ 实纳消费税税额）× 适用税率"}, {"id": "c16", "tag": "考点08 · 征收管理 · 识", "title": "征收管理规定", "body": "城市维护建设税的纳税义务发生时间、纳税地点、纳税期限，比照增值税、消费税的相应规定；其纳税义务发生时间与“两税”的纳税义务发生时间一致，分别与“两税”同时缴纳。\n\n1. 同时缴纳：是指在缴纳“两税”时，应当在“两税”同一缴纳地点、同一缴纳期限内，一并缴纳对应的城市维护建设税。\n\n2. 采用委托代征、代扣代缴、代收代缴、预缴、补缴等方式缴纳“两税”的，应当同时缴纳城市维护建设税。代扣代缴，不含因境外单位和个人向境内销售服务、无形资产代扣代缴增值税情形。"}];
+const STORE_KEY = "jcss_tax1_ch4_v1";
+const INTERVALS = [0,1,2,4,7,15,30];
+const DAY = 86400000;
+
+function todayNum(){ const d=new Date(); return Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()); }
+function labelForBox(box){ return ["今天再练","明天","2 天后","4 天后","7 天后","15 天后","30 天后"][box] || (box+" 天后"); }
+
+let state = load();
+function load(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }catch(e){ return {}; } }
+function save(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){} }
+function st(id){ if(!state[id]) state[id] = { box:0, due: todayNum(), reps:0 }; return state[id]; }
+CARDS.forEach(c=>st(c.id));
+
+let queue = [];
+let cur = 0;
+
+function buildQueue(){
+  const t = todayNum();
+  queue = CARDS.filter(c => st(c.id).due <= t).map(c=>c.id);
+  queue.sort((a,b)=> st(a).due - st(b).due);
+  cur = 0;
+}
+
+function render(animDir){
+  const id = queue[cur];
+  const cardEl = document.getElementById("card");
+  const doneEl = document.getElementById("done");
+  const actions = document.getElementById("actions");
+  const nav = document.getElementById("nav");
+  const hint = document.getElementById("hint");
+
+  if(!id){
+    cardEl.style.display = "none";
+    doneEl.classList.add("show");
+    doneEl.innerHTML = renderDone();
+    actions.style.display = "none";
+    nav.style.display = "none";
+    hint.style.display = "none";
+    updateHeader();
+    return;
+  }
+  cardEl.style.display = "flex";
+  doneEl.classList.remove("show");
+  actions.style.display = "grid";
+  nav.style.display = "flex";
+  hint.style.display = "block";
+
+  const c = CARDS.find(x=>x.id===id);
+  const s = st(id);
+  document.getElementById("tag").textContent = c.tag;
+  document.getElementById("title").textContent = c.title;
+  document.getElementById("body").textContent = c.body;
+  document.getElementById("meta").innerHTML =
+    "<span>练习次数："+(s.reps||0)+" 次</span>" +
+    "<span>下次复习："+labelForBox(s.box)+"</span>";
+  document.getElementById("body").scrollTop = 0;
+  document.getElementById("counter").textContent = (cur+1)+" / "+queue.length;
+  document.getElementById("prev").disabled = (cur<=0);
+  document.getElementById("next").disabled = (cur>=queue.length-1);
+
+  if(animDir){
+    cardEl.style.transition="none";
+    cardEl.style.transform="translateX("+(animDir==="left"?46:-46)+"px)";
+    cardEl.style.opacity="0";
+    requestAnimationFrame(()=>{
+      cardEl.style.transition="transform .24s ease, opacity .24s ease";
+      cardEl.style.transform="translateX(0)";
+      cardEl.style.opacity="1";
+    });
+  }
+  updateHeader();
+}
+
+function renderDone(){
+  const t = todayNum();
+  const buckets = {};
+  CARDS.forEach(c=>{ const s=st(c.id); const dd=Math.max(0,Math.round((s.due-t)/DAY)); buckets[dd]=(buckets[dd]||0)+1; });
+  const labels={0:"今天",1:"明天",2:"2 天后",4:"4 天后",7:"7 天后",15:"15 天后",30:"30 天后",60:"60 天后"};
+  let sched = "<div class='sched'><b>后续复习排期</b><br>";
+  Object.keys(buckets).sort((a,b)=>a-b).forEach(k=>{
+    sched += "· "+(labels[k]||(k+" 天后"))+"："+buckets[k]+" 张<br>";
+  });
+  sched += "</div>";
+  return "<div class='big'>🎉</div><h3>今日复习完成</h3>"+
+    "<p>共 "+CARDS.length+" 张卡片，已按记忆效果排好下次复习时间。</p>"+sched+
+    "<p style='margin-top:14px'>明天再来，系统会把到期的卡片自动排给你。</p>";
+}
+
+function updateHeader(){
+  const t = todayNum();
+  const dueCount = CARDS.filter(c=>st(c.id).due<=t).length;
+  const doneCount = CARDS.length - dueCount;
+  document.getElementById("sub").textContent = "今日待复习 "+dueCount+" 张 ｜ 已完成 "+doneCount+" / "+CARDS.length;
+  document.getElementById("barfill").style.width = (doneCount/CARDS.length*100)+"%";
+}
+
+function grade(id, g){
+  const s = st(id);
+  if(g==="again"){ s.box = 0; }
+  else if(g==="hard"){ s.box = Math.max(0, s.box); }
+  else { s.box = Math.min(6, s.box+1); }
+  let iv;
+  if(g==="again") iv = 0;
+  else if(g==="hard") iv = Math.max(1, Math.round((INTERVALS[s.box]||1)*0.5));
+  else iv = INTERVALS[s.box];
+  s.due = todayNum() + iv*DAY;
+  s.reps = (s.reps||0)+1;
+  save();
+}
+
+function onGrade(g){
+  const id = queue[cur];
+  if(!id) return;
+  grade(id, g);
+  if(g==="again"){ queue.splice(cur,1); queue.push(id); if(cur>=queue.length) cur=0; }
+  else { queue.splice(cur,1); if(cur>=queue.length) cur=0; }
+  render("left");
+}
+
+function next(){ if(cur < queue.length-1){ cur++; render("left"); } }
+function prev(){ if(cur > 0){ cur--; render("right"); } }
+
+document.getElementById("actions").addEventListener("click", e=>{
+  const b = e.target.closest("button[data-g]");
+  if(b) onGrade(b.dataset.g);
+});
+document.getElementById("prev").addEventListener("click", prev);
+document.getElementById("next").addEventListener("click", next);
+
+document.getElementById("reset").addEventListener("click", ()=>{
+  if(confirm("确定重置本机的复习进度吗？（所有卡片将回到待复习状态）")){
+    state = {}; save(); CARDS.forEach(c=>st(c.id)); buildQueue(); render();
+  }
+});
+
+// 手势：touch + pointer 双通道
+(function(){
+  const stage = document.getElementById("stage");
+  let sx=null, sy=null;
+  function start(x,y){ sx=x; sy=y; }
+  function end(x,y){
+    if(sx===null) return;
+    const dx=x-sx, dy=y-sy; sx=null;
+    if(Math.abs(dx)>50 && Math.abs(dx)>Math.abs(dy)*1.2){ dx<0?next():prev(); }
+  }
+  stage.addEventListener("touchstart", e=>{ const t=e.changedTouches[0]; start(t.clientX,t.clientY); }, {passive:true});
+  stage.addEventListener("touchend", e=>{ const t=e.changedTouches[0]; end(t.clientX,t.clientY); }, {passive:true});
+  stage.addEventListener("touchcancel", ()=>{ sx=null; }, {passive:true});
+  stage.addEventListener("pointerdown", e=>{ if(e.pointerType==="mouse") start(e.clientX,e.clientY); });
+  stage.addEventListener("pointerup", e=>{ if(e.pointerType==="mouse") end(e.clientX,e.clientY); });
+})();
+
+buildQueue();
+render();
+</script>
+</body>
+</html>
