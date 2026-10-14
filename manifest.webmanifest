@@ -1,0 +1,16 @@
+{
+  "name": "税法(I) 记忆卡",
+  "short_name": "税法记忆卡",
+  "description": "东奥《税法(I)》考点记忆卡 · 按艾宾浩斯曲线复习",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#eef2f7",
+  "theme_color": "#0d9488",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
